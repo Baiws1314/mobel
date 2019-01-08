@@ -5,15 +5,18 @@
       <router-view></router-view>
     </section>
     <footer>
-      <router-link to="/home" tag="span" class="">首页</router-link>
-      <router-link to="/strategy" tag="span">攻略</router-link>
-      <router-link to="/cart" tag="span">购物车</router-link>
-      <router-link to="/my" tag="span">我的</router-link>
+      <router-link to="/home" tag="span" class="iconfont icon-home"></router-link>
+      <router-link to="/strategy" tag="span" class="iconfont icon-tag"></router-link>
+      <router-link to="/cart" tag="span" class="iconfont icon-cart"></router-link>
+      <router-link to="/my" tag="span" class="iconfont icon-wode"></router-link>
     </footer>
   </div>
 </template>
 
 <script>
+// import $ from 'jquery'
+// import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/js/bootstrap.min.js'
 export default {
   name: 'HelloWorld'
 }
