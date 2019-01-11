@@ -1,8 +1,14 @@
 <template>
   <div class="hello">
-    <mt-header fixed title="首页" style="height:50px;background:#ccc;color:#000;font-size:16px"></mt-header>
+    <mt-header fixed title="首页" style="height:50px;background-color: #558bdb;color:#000;font-size:16px"></mt-header>
     <section>
+      <transition
+      enter-active-class="animated slideInRight"
+      leave-active-class="animated fadeOutLeftBig"
+      :duration="{ enter: 500, leave: 50 }"
+    >
       <router-view></router-view>
+      </transition>
     </section>
     <footer>
       <router-link to="/home" tag="span" class="iconfont icon-home"></router-link>
@@ -25,7 +31,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .router-link-active{
-  color: #000;
+  color: rgb(236, 118, 40);
 }
 .hello{
   height: 100vh;
@@ -46,5 +52,7 @@ footer{
   color: #686868;
   background: #ccc;
 }
-
+.icon-home,.icon-tag,.icon-cart,.icon-wode{
+    font-size: 22px;
+}
 </style>

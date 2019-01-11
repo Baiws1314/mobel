@@ -69,7 +69,7 @@ export default{
     },
     methods:{
         fanhui(){
-            this.$router.go(-1);
+            this.$router.goBack();
         },
         //添加评论
         addComment: function(data) {
@@ -111,9 +111,9 @@ export default{
             template:`
     <div class="commentBox" style="left:10px;position:absolute;bottom:10px;">
         <p v-if="type" style="margin-left:8px;font-weight:100;font-size:14px">你回复&nbsp;@{{name}}</p>
-        <textarea style="border:1px solid #999" cols=43 rows=6 name="" placeholder="自古评论出奇才···" value="请填写评论内容" v-model="commentText"></textarea>
+        <textarea style="border:1px solid #999" cols=35 rows=4 name="" placeholder="自古评论出奇才···" value="请填写评论内容" v-model="commentText"></textarea>
         <div style="float:right;margin-right:10px">
-        <mt-button style="margin:5px 0 10px 8px" size="small" type="primary" class="btn" @click="addComment">发表</mt-button>
+        <mt-button style="margin:2px 0 10px 8px" size="small" type="primary" class="btn" @click="addComment">发表</mt-button>
         <br>
         <mt-button style="margin:5px 0 10px 8px" size="small" type="danger" class="btn" @click="canelComment">取消</mt-button>
         </div>

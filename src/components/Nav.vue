@@ -3,9 +3,9 @@
     <header> <span class="fanhui" @click="fanhui()">&lt; </span>服饰配饰</header>
     <section>
         <mt-swipe :auto="4000" style="height:200px">
-            <mt-swipe-item style="background:rgba(0,0,0,0.3);text-align:center;line-height:200px">1</mt-swipe-item>
-            <mt-swipe-item style="background:rgba(0,0,0,0.3);text-align:center;line-height:200px">2</mt-swipe-item>
-            <mt-swipe-item style="background:rgba(0,0,0,0.3);text-align:center;line-height:200px">3</mt-swipe-item>
+            <mt-swipe-item><img src="../assets/img1.jpg" alt=""></mt-swipe-item>
+            <mt-swipe-item><img src="../assets/img3.jpg" alt=""></mt-swipe-item>
+            <mt-swipe-item><img src="../assets/img4.jpg" alt=""></mt-swipe-item>
         </mt-swipe>
         <div class="art">
             <div v-for="(item,i) in goodsA" :key='i'>
@@ -14,7 +14,7 @@
                 <div class="con">
                     <p class="tit">{{item.tit}}</p>
                     <div>
-                        <p class="zhe">低至{{item.dazhe}}折</p>
+                        <p class="zhe"><span>￥{{item.pri}}</span> 低至{{item.dazhe}}折</p>
                         <p class="shou">
                             <span class="iconfont icon-shoucang">{{item.shoucang}}</span>
                             <span class="iconfont icon-pinglun">{{item.pinglun}}</span>
@@ -57,6 +57,7 @@ Mock.mock('http://www.bbb.com',{
                     "shoucang":"@integer(500,600)",
                     "pinglun":"@integer(100,200)",
                     "dazhe|0-10.2":2,
+                    "pri":"@integer(200,1000)",
                     "time":"@datetime()"
                 }
            ]
@@ -72,11 +73,23 @@ export default{
     },
     methods:{
         fanhui(){
-            this.$router.go(-1);
+            this.$router.goBack();
         }
     },
     mounted(){
         var _this=this;
+        axois({
+            method:'get',
+            url:'http://13.250.74.156:8080/WisdomMall-1.0.0/findGoodsView.do',
+            params:{
+                gtid:1,
+                limit:10,
+                page:1
+            }
+        }).then(function(data){
+            console.log(data.data)
+        })
+
         // console.log(this.$route.params.gid)
         axois({
             method:'get',
@@ -92,7 +105,7 @@ export default{
 </script>
 <style scoped>
 .router-link-active,.active{
-  color: #000;
+  color: rgb(236, 118, 40);
 }
 header{
     height: 50px;
@@ -151,5 +164,10 @@ footer{
 }
 .icon-home,.icon-tag,.icon-cart,.icon-wode{
     font-size: 22px;
+}
+
+.mint-swipe-items-wrap img{
+    height: 200px;
+    width:100vw;
 }
 </style>

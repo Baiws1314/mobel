@@ -9,9 +9,10 @@
     <mt-actionsheet :actions="data" v-model="sheetVisible"></mt-actionsheet>
     <section>
         <div style="background:#eee">
-        <img height="200px" src="../assets/logo.png" alt="">
+        <img height="200px" src="../assets/logo.png" alt="" @click="swiperImgClick()">
         </div>
         <h4>{{goodobj.gtit}}</h4>
+        <p style="margin-left:8px;line-height:30px;color:#f00;">￥{{goodobj.pri}} <span style="margin-left:10px;font-size:13px">低至{{goodobj.dazhe}}折</span></p>
         <p class="yufu">预付定金+店铺券</p>
         <div class="ps">
             <p>· 大牌女装双11预售热卖中，预付定金+店铺券</p>
@@ -22,13 +23,13 @@
         </div>
         <h2>精选好货</h2>
         <div class="jing">
-            <figure v-for="(item,i) in goodobj.list" :key='i'>
+            <router-link to="/home" tag="figure" v-for="(item,i) in goodobj.list" :key='i'>
                 <img :src="item.srcImg" >
                 <figcaption>
                     <p class="pri">￥{{item.price}}.00<span>￥{{item.price+100}}.00</span></p>
                     <p class="con">东方精工Hi好日福建安全国家级knee固然</p>
                 </figcaption>
-            </figure>
+            </router-link>
         </div>
     </section>
     <footer>
@@ -45,13 +46,37 @@
             <figcaption>{{this.$store.state.cart}}</figcaption>
         </figure>
         <figure class="buy">
-            <router-link to='' tag="figcaption" >立即购买</router-link>
+            <router-link to='' tag="figcaption">立即购买</router-link>
         </figure>
     </footer>
+    <div class="goodCB" v-show='goodshow' @click="goodBShow()">
+        <div class="goodC" @click="showHide($event)">
+            <div class="imgGood">
+                <h1><img src="../assets/img1.jpg" alt=""></h1>
+                <div class="goodTit">
+                    <p>测试商品</p>
+                    <p class="goodP">￥100.00</p>
+                </div>
+            </div>
+            <div class="goodShu">
+                <h2>颜色:</h2>
+                <span class="goodcolor" @click="colorClick($event)">蓝色</span>
+                <span class="goodcolor" @click="colorClick($event)">白色</span>
+                <span class="goodcolor" @click="colorClick($event)">红色</span>
+                <h2>尺寸:</h2>
+                <span class="goodsize" @click="clickSize($event)">S</span>
+                <span class="goodsize" @click="clickSize($event)">M</span>
+                <span class="goodsize" @click="clickSize($event)">L</span>
+                <span class="goodsize" @click="clickSize($event)">XL</span>
+            </div>
+            <button>确 定</button>
+        </div>
+    </div>
 </div>
 
 </template>
 <script>
+import { ImagePreview } from 'vant';
 import axois from 'axios'
 import Mock from 'mockjs'
 import $ from 'jquery'
@@ -64,7 +89,9 @@ Mock.mock('http://www.ccc.com',{
             'imgSrc':"@image('200x200')",
             'gtit':"@csentence(10,16)",
             'active':"@csentence(66,86)",
-           'list|10-16' :[
+            'pri':"@integer(200,1000)",
+            "dazhe|0-10.2":2,
+            'list|10-16' :[
                {
                     "lid|+1":0,
                     "srcImg":"@image('160x160')",
@@ -93,7 +120,12 @@ export default{
     name:'Gdetail',
     data(){
         return{
+            goodshow:false,
             goodobj:{},
+            swiperData:[
+                'https://img.yzcdn.cn/1.jpg',
+                'https://img.yzcdn.cn/2.jpg'
+            ],
             data:[
                 {
                     name:'新浪微博',
@@ -125,9 +157,21 @@ export default{
     },
     methods:{
         fanhui(){
-            this.$router.go(-1);
+            this.$router.goBack();
         },
-
+        colorClick(e){
+            var target=$(e.target);
+            $('.goodcolor').removeClass('colorClick');
+            target.addClass('colorClick');
+        },
+        clickSize(e){
+            var target=$(e.target);
+            $('.goodsize').removeClass('colorSize');
+            target.addClass('colorSize');
+        },
+        showHide(e){
+            e.cancelBubble=true;
+        },
         addshoucang(){
             var _this=this;
             axois({
@@ -144,21 +188,27 @@ export default{
                 }
             })
         },
+        goodBShow(){
+            this.goodshow=false;
+            $(".goodC").animate({'bottom':'-300px'})
+        },
         addcart(){
-            var _this=this;
-            axois({
-                method:'get',
-                url:'http://www.eee.com'
-            }).then(function(data){
-                // console.log(data.data.cart.data);
-                if(data.data.cart.data==1){
-                    _this.$store.commit('addCart')
-                    Toast({
-                        message: '添加购物车成功！',
-                        className:'cartToast'
-                    });
-                }
-            })
+            this.goodshow=true;
+            $(".goodC").animate({'bottom':'0px'})
+            // var _this=this;
+            // axois({
+            //     method:'get',
+            //     url:'http://www.eee.com'
+            // }).then(function(data){
+            //     // console.log(data.data.cart.data);
+            //     if(data.data.cart.data==1){
+            //         _this.$store.commit('addCart')
+            //         Toast({
+            //             message: '添加购物车成功！',
+            //             className:'cartToast'
+            //         });
+            //     }
+            // })
         },
         actionSheet(){
             this.sheetVisible=true;
@@ -169,6 +219,7 @@ export default{
                 message: '确定分享到新浪微博?',
                 showCancelButton: true
             });
+            $('.mint-msgbox-confirm').click(this.toast)
         },
         getWX(){
             MessageBox({
@@ -176,6 +227,7 @@ export default{
                 message: '确定分享到微信?',
                 showCancelButton: true
             });
+            $('.mint-msgbox-confirm').click(this.toast)
         },
         getPYQ(){
             MessageBox({
@@ -183,6 +235,7 @@ export default{
                 message: '确定分享到朋友圈',
                 showCancelButton: true
             });
+            $('.mint-msgbox-confirm').click(this.toast)
         },
         getQQ(){
             MessageBox({
@@ -190,6 +243,7 @@ export default{
                 message: '确定分享到QQ?',
                 showCancelButton: true
             });
+            $('.mint-msgbox-confirm').click(this.toast)
         },
         getQQKJ(){
             MessageBox({
@@ -197,12 +251,23 @@ export default{
                 message: '确定分享到QQ空间?',
                 showCancelButton: true
             });
+            $('.mint-msgbox-confirm').click(this.toast)
         },
         getFZLJ(){
             Toast({
             message: '复制成功',
             iconClass: 'icon icon-success'
             });
+        },
+        toast(){
+            Toast({
+            message: '分享成功',
+            iconClass: 'icon icon-success',
+            duration:2000
+            });
+        },
+        swiperImgClick(){
+            ImagePreview(this.swiperData)
         }
     },
     mounted(){
@@ -213,12 +278,6 @@ export default{
         $(".mint-actionsheet-listitem").eq(4).prepend("<span style='text-align:center;display:block;font-size:45px;margin-top:20px;' class='iconfont icon-062qqkongjian'></span>");
         $(".mint-actionsheet-listitem").eq(5).prepend("<span style='text-align:center;display:block;font-size:30px;margin-top:20px;' class='iconfont icon-fuzhilianjie'></span>");
        
-       $('.mint-msgbox-confirm').click(function () { 
-           Toast({
-            message: '分享成功',
-            iconClass: 'icon icon-success'
-            });
-       });
        var _this=this;
         axois({
             method:'get',
@@ -251,7 +310,7 @@ section h4{
     font-size: 15px;
 }
 .yufu{
-    color: rgb(245, 52, 52);
+    color: #3F51B5;
     font-size: 13px;
     margin-left: 8px;
 }
@@ -366,5 +425,86 @@ footer figcaption{
     font-size: 30px;
     color: #686868;
     text-align: center;
+}
+
+.goodCB{
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    position: fixed;
+    
+}
+.goodC{
+    width: 100vw;
+    height: 300px;
+    background: #fff;
+    position: absolute;
+    bottom: -300px;
+    padding-left:15px;
+}
+.imgGood{
+    display: flex;
+    margin-top: -20px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+.imgGood h1{
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 3px; 
+    margin-right: 20px;  
+}
+.imgGood img{
+    width: 80px;
+    height: 80px;
+}
+.goodTit{
+    margin-top: 20px;
+}
+.goodTit p{
+    line-height: 30px;
+}
+.goodP{
+    font-size: 20px;
+    color: #f00;
+}
+.goodShu{
+    border-bottom: 1px solid #999;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+.goodShu h2{
+    font-weight: 100;
+    font-size: 20px;
+
+}
+.goodShu span{
+    display: inline-block;
+    width: 70px;
+    height: 34px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    text-align: center;
+    line-height: 34px;
+    margin-right: 5px;
+}
+.goodC button{
+    width: 100vw;
+    border: 0;
+    background: rgb(243, 47, 47);
+    height: 50px;
+    color: #fff;
+    font-size: 20px;
+}
+.colorClick{
+    background: rgb(231, 68, 68);
+    color: #fff;
+}
+.colorSize{
+    background: rgb(231, 68, 68);
+    color: #fff;
 }
 </style>

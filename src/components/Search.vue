@@ -47,16 +47,30 @@ export default{
     },
     methods:{
         fanhui(){
-            this.$router.go(-1);
+            this.$router.goBack();
         }
     },
+    // http://www.fff.com
     mounted(){
+        console.log(this.$route.query.goodsname);
         var _this=this;
+        // axois({
+        //     method:'get',
+        //     url:'http://13.250.74.156:8080/WisdomMall-1.0.0/fingGoodsByGoodsName.do',
+        //     params:{
+        //         goodsname:_this.$route.query.goodsname,
+        //         limit:10,
+        //         page:1
+        //     }
+        // }).then(function(data){
+        //     console.log(data.data);
+        //     // _this.list=data.data.list;
+        // })
         axois({
             method:'get',
             url:'http://www.fff.com'
         }).then(function(data){
-            // console.log(data.data.list);
+            // console.log(data.dsata);
             _this.list=data.data.list;
         })
     }

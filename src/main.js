@@ -3,10 +3,18 @@
 import Vue from 'vue'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
+
+import Vant from 'vant';
+import 'vant/lib/index.css';
+
+Vue.use(Vant);
+
 import App from './App'
 import router from './router'
 import store from './store'
 import './assets/font/iconfont.css'
+import './assets/js/animate.css'
+
 
 Vue.use(MintUI)
 var vm1=new Vue({})
