@@ -30,14 +30,9 @@ module.exports = {
       '@': resolve('src'),
       'jquery':'jquery'
     }
+  
   },
-  // plgins:[
-  //   new webpack.ProvidePlugin({
-  //     $:'jQuery',
-  //     jQuery:"jquery",
-  //     "windows.jQuery":"jquery"
-  //   })
-  // ],
+  
   module: {
     rules: [
       {

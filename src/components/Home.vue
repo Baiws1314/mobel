@@ -18,16 +18,16 @@
         <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <van-list v-model="loading" :finished="finished" @load="onLoad">
         <div class="art">
-            <router-link to='/gdetail' tag="article" v-for="(item,i) in list" :key='i'>
-                <img :src="item.srcImg">
+            <router-link :to="'/gdetail/'+item.pid" tag="article" v-for="(item,i) in list" :key='i'>
+                <img width="100" height="100" :src="item.pimg">
                 <div class="con">
-                    <p class="tit">{{item.tit}}</p>
+                    <p class="tit">{{item.pname}}</p>
                     <div>
-                        <p class="zhe"><span>￥{{item.pri}}</span> 低至{{item.dazhe}}折</p>
+                        <p class="zhe"><span>￥{{item.pprice}}</span> 低至{{item.pdesc}}折</p>
                         <p class="shou">
-                            <span class="iconfont icon-shoucang">{{item.shoucang}}</span>
-                            <span class="iconfont icon-pinglun">{{item.pinglun}}</span>
-                            <span class="time">{{item.time}}</span>
+                            <span class="iconfont icon-shoucang">520</span>
+                            <span class="iconfont icon-pinglun">30</span>
+                            <span class="time">20分钟前</span>
                         </p>
                     </div>
                 </div>
@@ -51,39 +51,6 @@ import Mock from 'mockjs'
 import $ from 'jquery'
 // import { Indicator } from 'mint-ui';
 
-// Mock.mock('http://www.bbb.com',{
-//     'goods|8':[
-//         {
-//             'gid|+1':0,
-//             'imgSrc':"@image('50x50')",
-//            'list|5-10' :[
-//                {
-//                     "lid|+1":0,
-//                     "srcImg":"@image('100x80')",
-//                     "tit":"@cparagraph(10,16)",
-//                     "shoucang":"@integer(500,600)",
-//                     "pinglun":"@integer(100,200)",
-//                     "dazhe|0-10.2":2,
-//                     "time":"@datetime()"
-//                 }
-//            ]
-//         }
-//     ]
-// })
-Mock.mock('http://www.aaa.com',{
-    'list|5-10':[
-        {
-            "lid|+1":0,
-            "srcImg":"@image('100x80')",
-            "tit":"@cparagraph(10,16)",
-            "shoucang":"@integer(500,600)",
-            "pinglun":"@integer(100,200)",
-            "pri":"@integer(200,1000)",
-            "dazhe|0-10.2":2,
-            "time":"@datetime()"
-        }
-     ]
-})
 export default{
     name:'Home',
     data(){
@@ -104,11 +71,12 @@ export default{
             setTimeout(() => {
                 axois({
                     method:'get',
-                    url:'http://www.aaa.com'
+                    url:"http://jx.xuzhixiang.top/ap/api/productlist.php",
+                    params:{uid:15020}
                 }).then(function(data){
                     // console.log(data.data.list);
                     // _this.list=data.data.list;            
-                    _this.list=_this.list.concat(data.data.list);
+                    _this.list=_this.list.concat(data.data.data);
                     // console.log(_this.list)
                 })
                 _this.loading = false;
@@ -127,12 +95,6 @@ export default{
             }, 500);
         }
     },
-    beforeCreate(){
-        // Indicator.open({
-        // text: '加载中...',
-        // spinnerType: 'fading-circle'
-        // });
-    },
     mounted(){
         let winHeight = document.documentElement.clientHeight                          //视口大小
         document.getElementById('list-content').style.height = (winHeight - 46) +'px'  //调整上拉加载框高度
@@ -146,57 +108,14 @@ export default{
                     goodsname:_this.value
                 }
             })
-            // _this.$router.push("'/search'+_this.value");
         });
 
-        // http://13.250.74.156:8080/WisdomMall-1.0.0/goodsType/findAll.do
         axois({
             method:'get',
             url:'http://13.250.74.156:8080/WisdomMall-1.0.0/goodsType/findAll.do',
         }).then(function(data){
             // console.log(data.data)
             _this.goods=data.data;     
-        })
-
-
-        // 模糊查询
-        // var _this=this;
-        // axois({
-        //     method:'get',
-        //     url:'http://13.250.74.156:8080/WisdomMall-1.0.0/fingGoodsByGoodsName.do',
-        //     params:{
-        //         goodsname:'衣服',
-        //         limit:10,
-        //         page:1
-        //     }
-        // }).then(function(data){
-        //     console.log(data.data);
-        //     // _this.list=data.data.list;
-        // })
-
-        // axois({ method:'get',
-        //     url:"http://13.250.74.156:8080/WisdomMall-1.0.0/findGoodsView.do",
-        //     params:{gtid:1,limit:10,page:1}
-        // }).then(function(data){
-        //     console.log(data.data)
-        // })
-        
-        // axois({
-        //     method:'get',
-        //     url:'http://www.bbb.com',
-        // }).then(function(data){
-        //     // console.log(data.data.goods)
-        //     _this.goods=data.data.goods;
-            
-        // })
-
-        axois({
-            method:'get',
-            url:'http://www.aaa.com'
-        }).then(function(data){
-            // console.log(data.data.list);
-            _this.list=data.data.list;            
-            // console.log(_this.list)
         })
     }
 }

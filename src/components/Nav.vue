@@ -1,6 +1,6 @@
 <template>
 <div class='nav'>
-    <header> <span class="fanhui" @click="fanhui()">&lt; </span>服饰配饰</header>
+    <header> <span class="fanhui" @click="fanhui()">&lt; </span>{{this.$store.state.nav[this.$route.params.gid-1]}}</header>
     <section>
         <mt-swipe :auto="4000" style="height:200px">
             <mt-swipe-item><img src="../assets/img1.jpg" alt=""></mt-swipe-item>
@@ -9,16 +9,16 @@
         </mt-swipe>
         <div class="art">
             <div v-for="(item,i) in goodsA" :key='i'>
-                <router-link to="/gdetail" tag="article">
-                <img :src="item.srcImg">
+                <router-link :to="'/gdetail/'+item.pid" tag="article">
+                <img width="100" height="100" :src="item.pimg">
                 <div class="con">
-                    <p class="tit">{{item.tit}}</p>
+                    <p class="tit">{{item.pname}}</p>
                     <div>
-                        <p class="zhe"><span>￥{{item.pri}}</span> 低至{{item.dazhe}}折</p>
+                        <p class="zhe"><span>￥{{item.pprice}}</span> 低至{{item.pdesc}}折</p>
                         <p class="shou">
-                            <span class="iconfont icon-shoucang">{{item.shoucang}}</span>
-                            <span class="iconfont icon-pinglun">{{item.pinglun}}</span>
-                            <span class="time">{{item.time}}</span>
+                            <span class="iconfont icon-shoucang">520</span>
+                            <span class="iconfont icon-pinglun">30</span>
+                            <span class="time">20分钟前</span>
                         </p>
                     </div>
                 </div>
@@ -44,26 +44,26 @@
 <script>
 import axois from 'axios'
 import Mock from 'mockjs'
-Mock.mock('http://www.bbb.com',{
-    'goods|8':[
-        {
-            'gid|+1':0,
-            'imgSrc':"@image('50x50')",
-           'list|5-10' :[
-               {
-                    "lid|+1":0,
-                    "srcImg":"@image('100x80')",
-                    "tit":"@cparagraph(0,16)",
-                    "shoucang":"@integer(500,600)",
-                    "pinglun":"@integer(100,200)",
-                    "dazhe|0-10.2":2,
-                    "pri":"@integer(200,1000)",
-                    "time":"@datetime()"
-                }
-           ]
-        }
-    ]
-})
+// Mock.mock('http://www.bbb.com',{
+//     'goods|8':[
+//         {
+//             'gid|+1':0,
+//             'imgSrc':"@image('50x50')",
+//            'list|5-10' :[
+//                {
+//                     "lid|+1":0,
+//                     "srcImg":"@image('100x80')",
+//                     "tit":"@cparagraph(0,16)",
+//                     "shoucang":"@integer(500,600)",
+//                     "pinglun":"@integer(100,200)",
+//                     "dazhe|0-10.2":2,
+//                     "pri":"@integer(200,1000)",
+//                     "time":"@datetime()"
+//                 }
+//            ]
+//         }
+//     ]
+// })
 export default{
     name:'Nav',
     data(){
@@ -77,27 +77,36 @@ export default{
         }
     },
     mounted(){
-        var _this=this;
-        axois({
-            method:'get',
-            url:'http://13.250.74.156:8080/WisdomMall-1.0.0/findGoodsView.do',
-            params:{
-                gtid:1,
-                limit:10,
-                page:1
-            }
-        }).then(function(data){
-            console.log(data.data)
-        })
+         var _this=this;
+        // axois({
+        //     method:'get',
+        //     url:'http://13.250.74.156:8080/WisdomMall-1.0.0/findGoodsView.do',
+        //     params:{
+        //         gtid:1,
+        //         limit:10,
+        //         page:1
+        //     }
+        // }).then(function(data){
+        //     console.log(data.data)
+        // })
 
         // console.log(this.$route.params.gid)
-        axois({
+        // axois({
+        //     method:'get',
+        //     url:'http://www.bbb.com'
+        // }).then(function(data){
+        //     // console.log(data.data.goods)
+        //     _this.goodsA=data.data.goods[_this.$route.params.gid].list;
+        //     // console.log(_this.goodsA)
+        // })
+
+        axois({ 
             method:'get',
-            url:'http://www.bbb.com'
+            url:"http://jx.xuzhixiang.top/ap/api/productlist.php",
+            params:{uid:15020}
         }).then(function(data){
-            // console.log(data.data.goods)
-            _this.goodsA=data.data.goods[_this.$route.params.gid].list;
-            // console.log(_this.goodsA)
+            // console.log(data.data);
+            _this.goodsA=data.data.data;
         })
         
     }

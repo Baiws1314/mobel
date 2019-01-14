@@ -1,13 +1,13 @@
 <template>
   <div class="hello">
-    <mt-header fixed title="首页" style="height:50px;background-color: #558bdb;color:#000;font-size:16px"></mt-header>
+    <mt-header fixed :title="tit" style="height:50px;background-color: #558bdb;color:#000;font-size:16px"></mt-header>
     <section>
       <transition
       enter-active-class="animated slideInRight"
       leave-active-class="animated fadeOutLeftBig"
       :duration="{ enter: 500, leave: 50 }"
     >
-      <router-view></router-view>
+      <router-view @toparent="getdata"></router-view>
       </transition>
     </section>
     <footer>
@@ -20,11 +20,21 @@
 </template>
 
 <script>
-// import $ from 'jquery'
+import $ from 'jquery'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/js/bootstrap.min.js'
 export default {
-  name: 'HelloWorld'
+  name: 'HelloWorld',
+  data(){
+    return{
+      tit:'首页'
+    }
+  },
+  methods:{
+    getdata(msg){
+      this.tit=msg;
+    }
+  }
 }
 </script>
 
